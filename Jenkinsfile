@@ -28,29 +28,29 @@ node {
         server.publishBuildInfo buildInfo
     }
 
-    // stage ('Xray artifactory scan') {
-    //     try {
-    //             def scanConfig = [
-    //                     'buildName'      : buildInfo.name,
-    //                     'buildNumber'    : buildInfo.number,
-    //                     'failBuild'      : true
-    //             ]
-    //             def scanResult = server.xrayScan scanConfig
-    //             echo scanResult as String
-    //     } catch(error) {
-    //         echo "First build failed, let's retry if accepted"
-    //         retry(2) {
-    //             input "Violation found, retry the scan?"
-    //             def scanConfig = [
-    //                     'buildName'      : buildInfo.name,
-    //                     'buildNumber'    : buildInfo.number,
-    //                     'failBuild'      : true
-    //             ]
-    //             def scanResult = server.xrayScan scanConfig
-    //             echo scanResult as String
-    //         }
-    //     }
-    // }
+    stage ('Xray artifactory scan') {
+        try {
+                def scanConfig = [
+                        'buildName'      : buildInfo.name,
+                        'buildNumber'    : buildInfo.number,
+                        'failBuild'      : true
+                ]
+                def scanResult = server.xrayScan scanConfig
+                echo scanResult as String
+        } catch(error) {
+            echo "First build failed, let's retry if accepted"
+            retry(2) {
+                input "Violation found, retry the scan?"
+                def scanConfig = [
+                        'buildName'      : buildInfo.name,
+                        'buildNumber'    : buildInfo.number,
+                        'failBuild'      : true
+                ]
+                def scanResult = server.xrayScan scanConfig
+                echo scanResult as String
+            }
+        }
+    }
     
     stage ('Deploy') {
         echo "Deploy"
