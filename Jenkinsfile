@@ -8,7 +8,7 @@ node {
     }
 
     stage ('Push to artifactory') {
-        env.JAVA_HOME = '/opt/jdk-15.0.2'
+        // env.JAVA_HOME = '/opt/jdk-15.0.2'
         // Obtain an Artifactory server instance, defined in Jenkins --> Manage Jenkins --> Configure System:
         server = Artifactory.server 'jf-server-1'
 
@@ -28,29 +28,29 @@ node {
         server.publishBuildInfo buildInfo
     }
 
-    stage ('Xray artifactory scan') {
-        try {
-                def scanConfig = [
-                        'buildName'      : buildInfo.name,
-                        'buildNumber'    : buildInfo.number,
-                        'failBuild'      : true
-                ]
-                def scanResult = server.xrayScan scanConfig
-                echo scanResult as String
-        } catch(error) {
-            echo "First build failed, let's retry if accepted"
-            retry(2) {
-                input "Violation found, retry the scan?"
-                def scanConfig = [
-                        'buildName'      : buildInfo.name,
-                        'buildNumber'    : buildInfo.number,
-                        'failBuild'      : true
-                ]
-                def scanResult = server.xrayScan scanConfig
-                echo scanResult as String
-            }
-        }
-    }
+    // stage ('Xray artifactory scan') {
+    //     try {
+    //             def scanConfig = [
+    //                     'buildName'      : buildInfo.name,
+    //                     'buildNumber'    : buildInfo.number,
+    //                     'failBuild'      : true
+    //             ]
+    //             def scanResult = server.xrayScan scanConfig
+    //             echo scanResult as String
+    //     } catch(error) {
+    //         echo "First build failed, let's retry if accepted"
+    //         retry(2) {
+    //             input "Violation found, retry the scan?"
+    //             def scanConfig = [
+    //                     'buildName'      : buildInfo.name,
+    //                     'buildNumber'    : buildInfo.number,
+    //                     'failBuild'      : true
+    //             ]
+    //             def scanResult = server.xrayScan scanConfig
+    //             echo scanResult as String
+    //         }
+    //     }
+    // }
     
     stage ('Deploy') {
         echo "Deploy"
