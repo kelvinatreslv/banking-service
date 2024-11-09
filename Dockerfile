@@ -1,5 +1,5 @@
 #FROM docker-local.apps.calm-k8s.resolve.local/openjdk-11
-FROM maven:3.6.3-openjdk-15
+FROM maven:3.8.1-openjdk-15
 
 LABEL maintainer="Tonny <tonny@reslv.io>"
 
